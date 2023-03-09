@@ -2,7 +2,8 @@
 
 using namespace std;
 
-struct OBJECT_TYPE {
+struct OBJECT_TYPE
+{
     int value;
 };
 
@@ -13,7 +14,7 @@ struct NODE
     NODE *next;
 };
 
-void InsertAfter(NODE *pNode, OBJECT_TYPE* ptrObj)
+void InsertAfter(NODE *pNode, OBJECT_TYPE *ptrObj)
 {
 
     NODE *next = pNode->next;
@@ -25,16 +26,35 @@ void InsertAfter(NODE *pNode, OBJECT_TYPE* ptrObj)
         next->prev = pNode->next;
 }
 
-void InsertBefore (NODE** first, NODE* pNode , OBJECT_TYPE* pObj)
+void InsertLast(NODE **first, OBJECT_TYPE *pObj)
 {
-    if (pNode->prev == NULL) {
-        NODE* newNode = new NODE();
-        newNode->prev = NULL;
+    NODE *current = *first;
+    while (current->next != NULL)
+    {
+        current = current->next;
+    }
+    InsertAfter(current, pObj);
+}
+
+void InsertBefore(NODE **first, NODE *pNode, OBJECT_TYPE *pObj)
+{
+    if (pNode->prev == NULL)
+    {
+        NODE *newNode = new NODE();
+        newNode->prev = pNode->prev;
         newNode->info = *pObj;
         newNode->next = *first;
 
         *first = newNode;
         pNode->prev = *first;
+    }
+    else
+    {
+        NODE *prev = pNode->prev;
+        pNode->prev = new NODE();
+        pNode->prev->prev = prev;
+        pNode->prev->info = *pObj;
+        pNode->prev->next = pNode;
     }
 }
 
@@ -61,8 +81,9 @@ void printr(NODE *first)
     cout << endl;
 }
 
-OBJECT_TYPE* mk(int x) {
-    OBJECT_TYPE* result = new OBJECT_TYPE();
+OBJECT_TYPE *mk(int x)
+{
+    OBJECT_TYPE *result = new OBJECT_TYPE();
     result->value = x;
     return result;
 }
@@ -81,7 +102,8 @@ int main()
     InsertAfter(node, mk(4));
     InsertAfter(node->next->next->next->next, mk(5));
     InsertBefore(&node, node, mk(6));
-    printr(node->next->next->next->next->next->next);
+    InsertLast(&node, mk(7));
+    printr(node->next->next->next->next->next->next->next);
     print(node);
 
     return 0;
