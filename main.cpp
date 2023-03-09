@@ -2,20 +2,24 @@
 
 using namespace std;
 
+struct OBJECT_TYPE {
+    int value;
+};
+
 struct NODE
 {
     NODE *prev;
-    int info;
+    OBJECT_TYPE info;
     NODE *next;
 };
 
-void InsertAfter(NODE *pNode, int val)
+void InsertAfter(NODE *pNode, OBJECT_TYPE* ptrObj)
 {
 
     NODE *next = pNode->next;
     pNode->next = new NODE();
     pNode->next->prev = pNode;
-    pNode->next->info = val;
+    pNode->next->info = *ptrObj;
     pNode->next->next = next;
     if (next != NULL)
         next->prev = pNode->next;
@@ -23,39 +27,46 @@ void InsertAfter(NODE *pNode, int val)
 
 void print(NODE *first)
 {
-    cout << first->info << " ";
+    cout << first->info.value << " ";
     while (first->next != NULL)
     {
         first = first->next;
-        cout << first->info << " ";
+        cout << first->info.value << " ";
     }
     cout << endl;
 }
 
 void printr(NODE *first)
 {
-    cout << first->info << " ";
+    cout << first->info.value << " ";
     while (first->prev != NULL)
     {
         first = first->prev;
-        cout << first->info << " ";
+        cout << first->info.value << " ";
     }
 
     cout << endl;
 }
+
+OBJECT_TYPE* mk(int x) {
+    OBJECT_TYPE* result = new OBJECT_TYPE();
+    result->value = x;
+    return result;
+}
+
 int main()
 {
     NODE *node = new NODE();
 
     node->prev = NULL;
-    node->info = 0;
+    node->info = *mk(0);
     node->next = NULL;
 
-    InsertAfter(node, 1);
-    InsertAfter(node, 2);
-    InsertAfter(node, 3);
-    InsertAfter(node, 4);
-    InsertAfter(node->next->next->next->next, 5);
+    InsertAfter(node, mk(1));
+    InsertAfter(node, mk(2));
+    InsertAfter(node, mk(3));
+    InsertAfter(node, mk(4));
+    InsertAfter(node->next->next->next->next, mk(5));
     printr(node->next->next->next->next->next);
     print(node);
 
