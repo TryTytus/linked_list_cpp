@@ -25,6 +25,19 @@ void InsertAfter(NODE *pNode, OBJECT_TYPE* ptrObj)
         next->prev = pNode->next;
 }
 
+void InsertBefore (NODE** first, NODE* pNode , OBJECT_TYPE* pObj)
+{
+    if (pNode->prev == NULL) {
+        NODE* newNode = new NODE();
+        newNode->prev = NULL;
+        newNode->info = *pObj;
+        newNode->next = *first;
+
+        *first = newNode;
+        pNode->prev = *first;
+    }
+}
+
 void print(NODE *first)
 {
     cout << first->info.value << " ";
@@ -67,7 +80,8 @@ int main()
     InsertAfter(node, mk(3));
     InsertAfter(node, mk(4));
     InsertAfter(node->next->next->next->next, mk(5));
-    printr(node->next->next->next->next->next);
+    InsertBefore(&node, node, mk(6));
+    printr(node->next->next->next->next->next->next);
     print(node);
 
     return 0;
